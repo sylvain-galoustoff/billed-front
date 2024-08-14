@@ -15,6 +15,8 @@ export default class {
         icon.addEventListener("click", () => this.handleClickIconEye(icon));
       });
     new Logout({ document, localStorage, onNavigate });
+    const icon = document.getElementById("layout-icon1");
+    console.log(icon);
   }
 
   handleClickNewBill = () => {

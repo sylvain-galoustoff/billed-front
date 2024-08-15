@@ -1,6 +1,7 @@
 import VerticalLayout from "./VerticalLayout.js";
 import ErrorPage from "./ErrorPage.js";
 import LoadingPage from "./LoadingPage.js";
+import { formatDate } from "../app/format.js";
 
 import Actions from "./Actions.js";
 
@@ -9,7 +10,7 @@ const row = (bill) => {
     <tr>
       <td>${bill.type}</td>
       <td>${bill.name}</td>
-      <td>${bill.date}</td>
+      <td data-testid="date">${bill.date}</td>
       <td>${bill.amount} €</td>
       <td>${bill.status}</td>
       <td>
@@ -20,7 +21,19 @@ const row = (bill) => {
 };
 
 const rows = (data) => {
-  return data && data.length ? data.map((bill) => row(bill)).join("") : "";
+  console.log(data);
+  if (data) {
+    let dataCopy = [...data];
+    dataCopy.sort((a, b) => new Date(b.date) - new Date(a.date)); // fix for [Bug report] - Bills : Sort by date wasn't done
+    console.log(dataCopy);
+    dataCopy = dataCopy.map((doc) => {
+      return {
+        ...doc,
+        date: formatDate(doc.date),
+      };
+    });
+    return dataCopy && dataCopy.length ? dataCopy.map((bill) => row(bill)).join("") : "";
+  }
 };
 
 export default ({ data: bills, loading, error }) => {

@@ -1,5 +1,5 @@
 import { ROUTES_PATH } from "../constants/routes.js";
-import { formatDate, formatStatus } from "../app/format.js";
+import { formatStatus } from "../app/format.js";
 import Logout from "./Logout.js";
 
 export default class {
@@ -16,7 +16,6 @@ export default class {
       });
     new Logout({ document, localStorage, onNavigate });
     const icon = document.getElementById("layout-icon1");
-    console.log(icon);
   }
 
   handleClickNewBill = () => {
@@ -40,14 +39,11 @@ export default class {
         .bills()
         .list()
         .then((snapshot) => {
-          const snapshotCopy = [...snapshot];
-          snapshotCopy.sort((a, b) => new Date(b.date) - new Date(a.date)); // fix for [Bug report] - Bills : Sort by date wasn't done
-
-          const bills = snapshotCopy.map((doc) => {
+          const bills = snapshot.map((doc) => {
             try {
               return {
                 ...doc,
-                date: formatDate(doc.date),
+                date: doc.date,
                 status: formatStatus(doc.status),
               };
             } catch (e) {
@@ -61,7 +57,6 @@ export default class {
               };
             }
           });
-          console.log("length", bills.length);
           return bills;
         });
     }

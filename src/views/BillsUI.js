@@ -24,7 +24,6 @@ const rows = (data) => {
   if (data) {
     let dataCopy = [...data];
     dataCopy.sort((a, b) => new Date(b.date) - new Date(a.date)); // fix for [Bug report] - Bills : Sort by date wasn't done
-    console.log(dataCopy);
     dataCopy = dataCopy.map((doc) => {
       return {
         ...doc,

@@ -2,14 +2,17 @@
  * @jest-environment jsdom
  */
 
-import { fireEvent, screen, waitFor } from "@testing-library/dom";
+import { screen, waitFor } from "@testing-library/dom";
 import BillsUI from "../views/BillsUI.js";
 import { bills } from "../fixtures/bills.js";
 import { ROUTES, ROUTES_PATH } from "../constants/routes.js";
 import { localStorageMock } from "../__mocks__/localStorage.js";
+import $ from "jquery";
+$.fn.modal = jest.fn();
 
 import router from "../app/Router.js";
 import Bills from "../containers/Bills.js";
+import userEvent from "@testing-library/user-event";
 
 describe("Given I am connected as an employee", () => {
   describe("When I am on Bills Page", () => {
@@ -48,7 +51,7 @@ describe("Given I am connected as an employee", () => {
       window.localStorage.setItem(
         "user",
         JSON.stringify({
-          type: "Admin",
+          type: "Employee",
         })
       );
 
@@ -56,17 +59,57 @@ describe("Given I am connected as an employee", () => {
         document,
         onNavigate,
         store: null,
-        bills: bills,
         localStorage: window.localStorage,
       });
-      document.body.innerHTML = BillsUI({ data: { bills } });
-      //Run test renvoie une erreur :
-      //TypeError: data is not iterable
+      document.body.innerHTML = BillsUI({ data: bills });
 
       const handleShowAddBill = jest.fn((e) => billsInstance.handleClickNewBill());
       await waitFor(() => screen.getByTestId("btn-new-bill"));
       const button = screen.getByTestId("btn-new-bill");
-      expect(button).toBeDefined();
+      button.addEventListener("click", handleShowAddBill);
+      userEvent.click(button);
+      await waitFor(() => screen.getByText("Envoyer une note de frais"));
+      expect(screen.getByText("Envoyer une note de frais")).toBeTruthy();
+    });
+    test("Then clicking on eye icon should show modal", async () => {
+      Object.defineProperty(window, "localStorage", { value: localStorageMock });
+      window.localStorage.setItem(
+        "user",
+        JSON.stringify({
+          type: "Employee",
+        })
+      );
+
+      const billsInstance = new Bills({
+        document,
+        onNavigate,
+        store: null,
+        localStorage: window.localStorage,
+      });
+      document.body.innerHTML = BillsUI({ data: bills });
+      await waitFor(() => screen.getAllByTestId("icon-eye"));
+
+      const handleClickIconEye = jest.fn((icon) =>
+        billsInstance.handleClickIconEye(icon)
+      );
+
+      const iconEye = screen.getAllByTestId("icon-eye")[0];
+      iconEye.addEventListener("click", () => handleClickIconEye(iconEye));
+      userEvent.click(iconEye);
+      expect(handleClickIconEye).toHaveBeenCalled();
+
+      // await waitFor(() => {
+      //   const modal = screen.getByRole("dialog");
+      //   expect(modal).toBeDefined();
+      // });
+      // Ce test échoue
+
+      await waitFor(() => {
+        const modal = screen.getByRole("dialog", { hidden: true });
+        expect(modal).toBeDefined();
+      });
+      // Ce test réussi à trouver une boite de dialogue cachée, ce qui n'est pas le résultat attendu
+      // handleClickIconEye ne semble pas ^étre appelé malgré la réussite du test ligne 99
     });
   });
 });

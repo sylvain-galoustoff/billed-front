@@ -10,7 +10,7 @@ const row = (bill) => {
     <tr>
       <td>${bill.type}</td>
       <td>${bill.name}</td>
-      <td data-testid="date">${bill.date}</td>
+      <td data-testid="date">${bill.formatedDate ?? bill.date}</td>
       <td>${bill.amount} €</td>
       <td>${bill.status}</td>
       <td>
@@ -27,7 +27,6 @@ const rows = (data) => {
     dataCopy = dataCopy.map((doc) => {
       return {
         ...doc,
-        date: formatDate(doc.date),
       };
     });
     return dataCopy && dataCopy.length ? dataCopy.map((bill) => row(bill)).join("") : "";

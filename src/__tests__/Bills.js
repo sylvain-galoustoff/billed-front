@@ -101,5 +101,16 @@ describe("Given I am connected as an employee", () => {
       const modale = screen.getByTestId("modal-employee");
       expect(modale).toBeTruthy();
     });
+    test("fetches bills from mock API GET", async () => {
+      localStorage.setItem("user", JSON.stringify({ type: "Employee", email: "a@a" }));
+      const root = document.createElement("div");
+      root.setAttribute("id", "root");
+      document.body.append(root);
+      router();
+      window.onNavigate(ROUTES_PATH.Bills);
+      await waitFor(() => screen.getByText("Mes notes de frais"));
+      const rows = await screen.getAllByTestId("bill-row");
+      expect(rows).toBeTruthy();
+    });
   });
 });

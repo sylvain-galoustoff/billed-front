@@ -1,13 +1,11 @@
 import VerticalLayout from "./VerticalLayout.js";
 import ErrorPage from "./ErrorPage.js";
 import LoadingPage from "./LoadingPage.js";
-import { formatDate } from "../app/format.js";
-
 import Actions from "./Actions.js";
 
 const row = (bill) => {
   return `
-    <tr>
+    <tr data-testid="bill-row">
       <td>${bill.type}</td>
       <td>${bill.name}</td>
       <td data-testid="date">${bill.formatedDate ?? bill.date}</td>

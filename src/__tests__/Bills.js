@@ -98,18 +98,8 @@ describe("Given I am connected as an employee", () => {
       userEvent.click(iconEye);
       expect(handleClickIconEye).toHaveBeenCalled();
 
-      // await waitFor(() => {
-      //   const modal = screen.getByRole("dialog");
-      //   expect(modal).toBeDefined();
-      // });
-      // Ce test échoue
-
-      await waitFor(() => {
-        const modal = screen.getByRole("dialog", { hidden: true });
-        expect(modal).toBeDefined();
-      });
-      // Ce test réussi à trouver une boite de dialogue cachée, ce qui n'est pas le résultat attendu
-      // handleClickIconEye ne semble pas ^étre appelé malgré la réussite du test ligne 99
+      const modale = screen.getByTestId("modal-employee");
+      expect(modale).toBeTruthy();
     });
   });
 });

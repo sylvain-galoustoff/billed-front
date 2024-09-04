@@ -16,6 +16,7 @@ export default class NewBill {
     this.billId = null;
     new Logout({ document, localStorage, onNavigate });
   }
+
   handleChangeFile = (e) => {
     e.preventDefault();
     const file = this.document.querySelector(`input[data-testid="file"]`).files[0];

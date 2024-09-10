@@ -156,7 +156,7 @@ describe("Given I am connected as an employee", () => {
 
       window.onNavigate(ROUTES_PATH.Bills);
       await new Promise(process.nextTick);
-      const message = await screen.getByText(/Erreur/);
+      const message = await screen.getByText(/Failed to fetch/);
       expect(message).toBeTruthy();
     });
   });

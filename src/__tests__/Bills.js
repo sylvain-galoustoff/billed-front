@@ -15,6 +15,8 @@ import router from "../app/Router.js";
 import Bills from "../containers/Bills.js";
 import userEvent from "@testing-library/user-event";
 
+jest.mock("../app/store", () => mockStore);
+
 describe("Given I am connected as an employee", () => {
   describe("When I am on Bills Page", () => {
     test("Then bill icon in vertical layout should be highlighted", async () => {
@@ -142,21 +144,21 @@ describe("Given I am connected as an employee", () => {
       });
       window.onNavigate(ROUTES_PATH.Bills);
       await new Promise(process.nextTick);
-      const message = await screen.getByText(/Erreur/);
+      const message = await screen.getByText(/Erreur 404/);
       expect(message).toBeTruthy();
     });
     test("fetches messages from an API and fails with 500 message error", async () => {
       mockStore.bills.mockImplementationOnce(() => {
         return {
           list: () => {
-            return Promise.reject(new Error("Erreur 500"));
+            return Promise.reject(new Error("erreur 500"));
           },
         };
       });
 
       window.onNavigate(ROUTES_PATH.Bills);
       await new Promise(process.nextTick);
-      const message = await screen.getByText(/Failed to fetch/);
+      const message = await screen.getByText(/erreur 500/);
       expect(message).toBeTruthy();
     });
   });

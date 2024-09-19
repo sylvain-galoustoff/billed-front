@@ -20,8 +20,8 @@ export default class NewBill {
   handleChangeFile = (e) => {
     e.preventDefault();
     const file = this.document.querySelector(`input[data-testid="file"]`).files[0];
-    const filePath = e.target.value.split(/\\/g);
-    const fileName = filePath[filePath.length - 1];
+    const fileName = file.name;
+    console.log(fileName);
 
     /* [Bug Hunt] - Bills */
     const allowedExtensions = ["jpg", "jpeg", "png"];
@@ -57,14 +57,8 @@ export default class NewBill {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    const fileErrorMessage = document.querySelector("#file-error");
 
     if (this.isValidFile) {
-      fileErrorMessage.classList.remove("field-error");
-      console.log(
-        'e.target.querySelector(`input[data-testid="datepicker"]`).value',
-        e.target.querySelector(`input[data-testid="datepicker"]`).value
-      );
       const email = JSON.parse(localStorage.getItem("user")).email;
       const bill = {
         email,
@@ -82,7 +76,6 @@ export default class NewBill {
       this.updateBill(bill);
       this.onNavigate(ROUTES_PATH["Bills"]);
     } else {
-      fileErrorMessage.classList.add("field-error");
       console.error(
         "Type de document incorrect, seuls les fichiers .jpg, .jpeg, .png sont acceptés"
       );

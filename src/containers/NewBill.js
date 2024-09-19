@@ -57,8 +57,10 @@ export default class NewBill {
 
   handleSubmit = (e) => {
     e.preventDefault();
+    const fileErrorMessage = document.querySelector("#file-error");
 
     if (this.isValidFile) {
+      fileErrorMessage.classList.remove("field-error");
       console.log(
         'e.target.querySelector(`input[data-testid="datepicker"]`).value',
         e.target.querySelector(`input[data-testid="datepicker"]`).value
@@ -80,6 +82,7 @@ export default class NewBill {
       this.updateBill(bill);
       this.onNavigate(ROUTES_PATH["Bills"]);
     } else {
+      fileErrorMessage.classList.add("field-error");
       console.error(
         "Type de document incorrect, seuls les fichiers .jpg, .jpeg, .png sont acceptés"
       );
